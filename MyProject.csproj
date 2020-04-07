@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200403181500_AddUser.cs" />
+    <Compile Remove="Migrations\20200403181500_AddUser.Designer.cs" />
+    <Compile Remove="Migrations\20200403182015_AddUser.cs" />
+    <Compile Remove="Migrations\20200403182015_AddUser.Designer.cs" />
+    <Compile Remove="Migrations\20200403182054_AddUser.cs" />
+    <Compile Remove="Migrations\20200403182054_AddUser.Designer.cs" />
+    <Compile Remove="Migrations\20200403182235_AddUser.cs" />
+    <Compile Remove="Migrations\20200403182235_AddUser.Designer.cs" />
+    <Compile Remove="Migrations\20200404024158_AddIdentity.cs" />
+    <Compile Remove="Migrations\20200404024158_AddIdentity.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+
+
+</Project>
