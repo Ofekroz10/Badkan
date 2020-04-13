@@ -25,6 +25,10 @@ namespace MyProject.Models.Reposetories
             this.db = db;
         }
 
+        public async Task<IdentityResult> AddRoleToUser(IdentityUser user, string roleName)
+        {
+            return await userManager.AddToRoleAsync(user, roleName);
+        }
 
         public async Task<IdentityResult> AddUserWithPassword(IdentityUser user, string password)
         {
@@ -50,7 +54,7 @@ namespace MyProject.Models.Reposetories
 
         public IEnumerable<IdentityUser> GetAll()
         {
-            return userManager.Users;
+            return userManager.Users.ToList();
         }
 
         public async Task<IdentityUser> GetByEmail(string email)
@@ -61,6 +65,17 @@ namespace MyProject.Models.Reposetories
         public async Task<IdentityUser> GetById(string id)
         {
             return await userManager.FindByNameAsync(id);
+        }
+
+        public IEnumerable<IdentityUserRole<string>> GetUserRols()
+        {
+            return db.UserRoles.ToList();
+        }
+
+        public async Task<bool> IsUserBelongToRole(string userId, string roleName)
+        {
+            var user = await GetById(userId);
+            return await userManager.IsInRoleAsync(user, roleName);
         }
 
         public async Task<IdentityResult> UpdateUser(IdentityUser user)

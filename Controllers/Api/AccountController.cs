@@ -144,5 +144,48 @@ namespace MyProject.Controllers.Api
             return BadRequest(result.Errors);
         }
 
+        [HttpPost(ApiRoutes.AccountRoutes.CREATE_ROLE)]
+        public async Task<IActionResult> CreateRole(AddUserToRoleDto rolldto)
+        {
+            var name = rolldto.RoleName;
+            var result = await userService.CreateRole(name);
+            if (result.Succeeded)
+                return Ok();
+            return BadRequest(result.Errors);
+
+        }
+
+        [HttpGet(ApiRoutes.AccountRoutes.GET_USER_ROLS)]
+        public IActionResult GetUsersByRoles()
+        {
+            var userRollsLst = userService.GetUsersByRolls();
+            return Ok(userRollsLst);
+
+        }
+
+        [HttpPost(ApiRoutes.AccountRoutes.ADD_USER_TO_ROLE)]
+        public async Task<IActionResult> AddUserToRole(int userId, AddUserToRoleDto roleDto)
+        {
+            var roleName = roleDto.RoleName;
+
+            if (await userService.CheckIfRoleExist(roleName))
+            {
+                if (await userService.CheckExistById(userId.ToString()))
+                {
+                    var result = await userService.RegisterUserToRole(userId, roleName);
+                    if (!result.Succeeded)
+                        ModelState.AddModelError("", string.Join(",", result.Errors));
+                }
+                else
+                    ModelState.AddModelError("", string.Format(UserValidationErors.ROLE_DO_NOT_EXIST, roleName));
+            }
+            else
+                ModelState.AddModelError("", string.Format(UserValidationErors.USER_DO_NOT_EXIST, userId));
+
+            if (ModelState.IsValid)
+                return Ok();
+            return BadRequest(ModelState);
+
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyProject.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,10 @@ namespace MyProject.Models.Reposetories
         public Task<IdentityResult> UpdateUser(IdentityUser user);
         public PasswordVerificationResult ComparePasswords(IdentityUser user, string newPassword);
         public Task<IdentityResult> DeleteUser(IdentityUser user);
+        public Task<IdentityResult> AddRoleToUser(IdentityUser user, string roleName);
+        public Task<bool> IsUserBelongToRole(string userId, string roleName);
+        public IEnumerable<IdentityUserRole<string>> GetUserRols();
+
+
     }
 }

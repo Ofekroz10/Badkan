@@ -18,7 +18,10 @@ namespace MyProject.Controllers.Api
             public const string UPDATE_USER = "{id}"; 
             public const string DELETE_USER = "{id}";
 
-
+            public const string ROLE = "role";
+            public const string CREATE_ROLE = ROLE; // post
+            public const string ADD_USER_TO_ROLE = ROLE + "/{userId}";
+            public const string GET_USER_ROLS = ROLE; //get
 
         }
 

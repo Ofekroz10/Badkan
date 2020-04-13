@@ -19,7 +19,8 @@ namespace MyProject.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private IUserService userService;
 
-        public AccountController(SignInManager<IdentityUser> singInManager, IUserRepository userRepo, 
+
+        public AccountController(SignInManager<IdentityUser> singInManager,
             IUserService userService)
         {
             this.signInManager = singInManager;
