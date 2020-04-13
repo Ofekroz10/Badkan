@@ -13,7 +13,7 @@ namespace MyProject.Validations
         public Length(int len)
         {
             this.len = len;
-            erorMsg = "The length is not " + len;
+            erorMsg = string.Format(UserValidationErors.ID_LENGTH,len);
         }
 
         protected override ValidationResult IsValid(object value,

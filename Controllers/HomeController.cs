@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyProject.Models;
 using MyProject.Models.Testing;
+using MyProject.ViewModel;
 
 namespace MyProject.Controllers
 {
@@ -43,9 +44,15 @@ namespace MyProject.Controllers
             */
         }
 
-        public IActionResult Index()
+
+
+
+
+        public IActionResult Index(MessagesViewModel vm = null)
         {
-            return View();
+            if(vm == null)
+                return View();
+            return View(vm);
         }
 
         public IActionResult Privacy()

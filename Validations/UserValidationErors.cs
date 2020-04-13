@@ -12,5 +12,7 @@ namespace MyProject.Validations
         public const string USER_DO_NOT_EXIST = "User '{0}' do not exist";
         public const string USER_ALREADY_EXIST = "User '{0}' already exist";
         public const string INCORRECT_PASSWORD = "Old password is not correct";
+        public const string ID_LENGTH = "The length is not {0}";
+
     }
 }

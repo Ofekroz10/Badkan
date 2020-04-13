@@ -1,8 +1,38 @@
-﻿@{
+﻿@model MyProject.ViewModel.MessagesViewModel
+
+@{
+
     ViewData["Title"] = "Home Page";
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+
+        <head>
+        </head>
+        <body>
+            <div class="text-center">
+                <h1 class="display-4">Welcome</h1>
+                <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+            </div>
+
+        @if (Model != null)
+        {
+            @if (Model.Messages != null)
+            {
+                @foreach (string msg in Model.Messages)
+                {
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            var msg1 = '@(msg)';
+                            alert(msg1);
+                        });
+
+
+                    </script>
+                }
+            }
+        }
+        </body>

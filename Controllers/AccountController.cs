@@ -9,6 +9,7 @@ using MyProject.Models.Reposetories;
 using MyProject.ViewModel;
 using MyProject.Validations;
 using Microsoft.AspNetCore.Authorization;
+using MyProject.Services;
 
 namespace MyProject.Controllers
 {
@@ -16,13 +17,13 @@ namespace MyProject.Controllers
     {
 
         private readonly SignInManager<IdentityUser> signInManager;
-        private IUserRepository userRepo;
+        private IUserService userService;
 
-
-        public AccountController(SignInManager<IdentityUser> singInManager, IUserRepository userRepo)
+        public AccountController(SignInManager<IdentityUser> singInManager, IUserRepository userRepo, 
+            IUserService userService)
         {
             this.signInManager = singInManager;
-            this.userRepo = userRepo;
+            this.userService = userService;
         }
         
 
@@ -70,13 +71,13 @@ namespace MyProject.Controllers
             {
                 var user = new IdentityUser { UserName = model.Id.ToString(), Email = model.Email };
 
-                if (await CheckExistByEmail(user.Email))
+                if (await userService.CheckExistByEmail(user.Email))
                 {
                     ModelState.AddModelError("", string.Format(UserValidationErors.EMAIL_EXIST_EROR_MSG,user.Email));
                     return View(model);
                 }
 
-                var result = await userRepo.AddUserWithPassword(user, model.Password);
+                var result = await userService.AddUserWithPassword(user, model.Password);
 
                 if (result.Succeeded)
                 {
@@ -114,9 +115,79 @@ namespace MyProject.Controllers
 
         }
 
-        private async Task<bool> CheckExistByEmail(string email)
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(long id)
         {
-            return await userRepo.GetByEmail(email) != null;
+            var user = await userService.GetById(id.ToString());
+            if (user == null)
+                return BadRequest();
+
+            UpdateUserViewModel updateViewModel = new UpdateUserViewModel
+            {
+                Email = user.Email,
+                Id = long.Parse(user.UserName),
+                PreId = long.Parse(user.UserName),
+                NewPassword = "If you dont want to change, enter your current password",
+                OldPassword = "If you dont want to change, enter your current password"
+
+            };
+
+            return View("Edit", updateViewModel);
+            //create view and http post to the view, then chack validation with the attribute
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(UpdateUserViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var userFromDb = await userService.GetById(user.PreId.ToString());
+
+                if (await userService.GetById(user.Id.ToString()) != null && user.Id != user.PreId)
+                    ModelState.AddModelError("", 
+                        string.Format(UserValidationErors.USER_ALREADY_EXIST, user.Id.ToString()));
+
+                if (await userService.CheckExistByEmail(user.Email) && !user.Email.Equals(userFromDb.Email))
+                    ModelState.AddModelError("", 
+                        string.Format(UserValidationErors.EMAIL_EXIST_EROR_MSG, user.Email));
+
+                if (!await userService.IsOldPasswordValidAsync(user.OldPassword, user.PreId))
+                    ModelState.AddModelError("", UserValidationErors.INCORRECT_PASSWORD);
+
+                if (ModelState.IsValid)
+                {
+
+                    var result = await userService.ChangePassword(userFromDb, user.OldPassword, user.NewPassword);
+
+                    if (!result.Succeeded)
+                        ModelState.AddModelError("", string.Join(",", result.Errors));
+                    else
+                    {
+                        userFromDb.Email = user.Email;
+                        userFromDb.UserName = user.Id.ToString();
+                        var resultAfterUpdate = await userService.UpdateUser(userFromDb);
+
+                        if (!resultAfterUpdate.Succeeded)
+                            ModelState.AddModelError("", string.Join(",", resultAfterUpdate.Errors));
+                        else
+                        {
+                            var updatedUser = await userService.GetById(user.Id.ToString());
+                            await signInManager.RefreshSignInAsync(updatedUser);
+
+                            MessagesViewModel msg = new MessagesViewModel();
+                            msg.Messages.Add("User edit succses");
+
+                            return RedirectToAction("Index", "Home",msg);
+                        }
+                    }
+                }
+            }
+          
+            return View("Edit", user);
         }
     }
+
+
 }

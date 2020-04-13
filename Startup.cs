@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyProject.Models;
 using MyProject.Models.Reposetories;
+using MyProject.Services;
 
 namespace MyProject
 {
@@ -33,6 +34,7 @@ namespace MyProject
             services.AddDbContextPool<MyDbContext>(
             options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
             services.AddIdentity<IdentityUser, IdentityRole>(option =>
             {
                 option.Password.RequiredLength = 5;
@@ -76,6 +78,7 @@ namespace MyProject
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }

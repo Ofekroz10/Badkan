@@ -42,6 +42,12 @@ namespace MyProject.Models.Reposetories
             return userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
         }
 
+        public async Task<IdentityResult> DeleteUser(IdentityUser user)
+        {
+            var result = await userManager.DeleteAsync(user);
+            return result;
+        }
+
         public IEnumerable<IdentityUser> GetAll()
         {
             return userManager.Users;
@@ -61,6 +67,7 @@ namespace MyProject.Models.Reposetories
         {
             return await userManager.UpdateAsync(user);
         }
+
     }
   }
 

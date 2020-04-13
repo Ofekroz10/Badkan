@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using MyProject.ViewModel;
-using System;
+using MyProject.Dtos;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyProject.Models.Reposetories
+namespace MyProject.Services
 {
-    public interface IUserRepository
+    public interface IUserService
     {
+        /*Validations*/
+        public Task<bool> IsOldPasswordValidAsync(string oldPassword, long id);
+        public Task<bool> CheckExistByEmail(string email);
+
+        /*Reposetory*/
         public IEnumerable<IdentityUser> GetAll();
         public Task<IdentityUser> GetById(string id);
         public Task<IdentityUser> GetByEmail(string email);
@@ -17,5 +20,13 @@ namespace MyProject.Models.Reposetories
         public Task<IdentityResult> UpdateUser(IdentityUser user);
         public PasswordVerificationResult ComparePasswords(IdentityUser user, string newPassword);
         public Task<IdentityResult> DeleteUser(IdentityUser user);
-    }
+
+
+        /*Api Functions */
+
+        public IList<UserDto> MakeUserDto(IEnumerable<IdentityUser> users);
+        public UserDto MakeUserDto(IdentityUser user);
+        //public IList<string> GetErorsFromModelState(ModelStateDictionary m)
+
+}
 }

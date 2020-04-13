@@ -12,57 +12,62 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyProject.Dtos;
 using MyProject.Models.Reposetories;
+using MyProject.Services;
 using MyProject.Validations;
 using PasswordVerificationResult = Microsoft.AspNetCore.Identity.PasswordVerificationResult;
 
 namespace MyProject.Controllers.Api
 {
     [AllowAnonymous]
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.AccountRoutes.ROOT)]
     [ApiController]
     [System.Runtime.InteropServices.Guid("5CDF4174-F4B6-425C-93DC-531C93F776A3")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserRepository userRepo;
+        private readonly IUserService userService;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public AccountController(IUserRepository userRepo, SignInManager<IdentityUser> signInManager)
+        public AccountController(IUserService userService, SignInManager<IdentityUser> signInManager)
         {
-            this.userRepo = userRepo;
             this.signInManager = signInManager;
+            this.userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet(ApiRoutes.AccountRoutes.ALL_USERS)]
         public IEnumerable<UserDto> GetAllUsers()
         {
-            return MakeUserDto(userRepo.GetAll());
+            return userService.MakeUserDto(userService.GetAll());
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<UserDto> GetUserAsync(int id)
+        [HttpGet(ApiRoutes.AccountRoutes.SPECIFIC_USER)]
+        public async Task<IActionResult> GetUserAsync(int id)
         {
-            var user = await userRepo.GetById(id.ToString());
-            return MakeUserDto(user);
+            var user = await userService.GetById(id.ToString());
+
+            if (user == null)
+                return BadRequest(string.Format(UserValidationErors.USER_DO_NOT_EXIST, id.ToString()));
+
+            return Ok(userService.MakeUserDto(user));
         }
 
-        [HttpPost]
-        public async Task<HttpResponseMessage> CreateUser(RegisterUserDto userDto)
+        [HttpPost(ApiRoutes.AccountRoutes.CREATE_USER)]
+        public async Task<IActionResult> CreateUser(RegisterUserDto userDto)
         {
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = userDto.Id.ToString(), Email = userDto.Email };
 
-                if (await CheckExistByEmail(user.Email))
-                    return CreateHttpMessage(HttpStatusCode.BadRequest,
+                if (await userService.CheckExistByEmail(user.Email))
+                    return BadRequest(
                          string.Format(UserValidationErors.EMAIL_EXIST_EROR_MSG, user.Email));
 
-                var result = await userRepo.AddUserWithPassword(user, userDto.Password);
+                var result = await userService.AddUserWithPassword(user, userDto.Password);
 
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return CreateHttpMessage(HttpStatusCode.OK);
+                    return Ok();
                 }
 
                 foreach (var eror in result.Errors)
@@ -70,99 +75,74 @@ namespace MyProject.Controllers.Api
                     ModelState.AddModelError("", eror.Description);
                 }
 
+                return BadRequest(ModelState);
             }
-            return CreateHttpMessage(HttpStatusCode.OK);
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<HttpResponseMessage> UpdateUser(int id, UpdateUserDto userDto)
+        [HttpPut(ApiRoutes.AccountRoutes.UPDATE_USER)]
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserDto userDto)
         {
             if (ModelState.IsValid)
             {
-                var userFromDb = await userRepo.GetById(id.ToString());
+                var userFromDb = await userService.GetById(id.ToString());
 
                 if (userFromDb == null)
-                    return CreateHttpMessage(HttpStatusCode.NotFound,
+                    return BadRequest(
                         string.Format(UserValidationErors.USER_DO_NOT_EXIST, id.ToString()));
 
-                if (await CheckExistByEmail(userDto.Email) && userDto.Email != userFromDb.Email)
-                    return CreateHttpMessage(HttpStatusCode.BadRequest, 
+                if (await userService.CheckExistByEmail(userDto.Email) && userDto.Email != userFromDb.Email)
+                    return BadRequest(
                         string.Format(UserValidationErors.EMAIL_EXIST_EROR_MSG, userDto.Email));
 
-                if(await userRepo.GetById(userDto.ToString())!=null)
-                    return CreateHttpMessage(HttpStatusCode.BadRequest, 
+                if (await userService.GetById(userDto.ToString()) != null)
+                    return BadRequest(
                         string.Format(UserValidationErors.USER_ALREADY_EXIST, userDto.Id));
 
 
-                PasswordVerificationResult passResult = userRepo.ComparePasswords(userFromDb, userDto.OldPassword);
+                PasswordVerificationResult passResult = userService.ComparePasswords(userFromDb, userDto.OldPassword);
 
                 if (passResult == PasswordVerificationResult.Success)
                 {
-                    var result = await userRepo.ChangePassword(userFromDb, userDto.OldPassword, userDto.Password);
+                    var result = await userService.ChangePassword(userFromDb, userDto.OldPassword, userDto.Password);
 
                     if (!result.Succeeded)
-                        return CreateHttpMessage(HttpStatusCode.BadRequest, string.Join(',',result.Errors));
+                        return BadRequest(result.Errors);
                 }
                 else
-                    return CreateHttpMessage(HttpStatusCode.BadRequest, UserValidationErors.INCORRECT_PASSWORD);
+                    return BadRequest(UserValidationErors.INCORRECT_PASSWORD);
 
                 userFromDb.Email = userDto.Email;
                 userFromDb.UserName = userDto.Id.ToString();
-                var resultAfterUpdate = await userRepo.UpdateUser(userFromDb);
+                var resultAfterUpdate = await userService.UpdateUser(userFromDb);
 
-                if(!resultAfterUpdate.Succeeded)
-                    return CreateHttpMessage(HttpStatusCode.BadRequest, string.Join(',', resultAfterUpdate.Errors));
+                if (!resultAfterUpdate.Succeeded)
+                    BadRequest(resultAfterUpdate.Errors);
 
-                return CreateHttpMessage(HttpStatusCode.OK);
+                return Ok();
 
             }
 
-            return CreateHttpMessage(HttpStatusCode.BadRequest, string.Join(",",ModelState.ToArray()));
+            return BadRequest(ModelState);
 
         }
 
+        [HttpDelete(ApiRoutes.AccountRoutes.DELETE_USER)]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            var user = await userService.GetById(id.ToString());
+            if (user == null)
+                return BadRequest(UserValidationErors.USER_DO_NOT_EXIST);
 
-        private IList<UserDto> MakeUserDto(IEnumerable<IdentityUser> users)
-        {
-            IList<UserDto> userDtoList = new List<UserDto>();
+            var result = await userService.DeleteUser(user);
+            if (result.Succeeded)
+                return Ok();
 
-            foreach (var user in users)
-            {
-                userDtoList.Add(MakeUserDto(user));
-            }
+            return BadRequest(result.Errors);
+        }
 
-            return userDtoList;
-        }
-        private UserDto MakeUserDto(IdentityUser user)
-        {
-            UserDto newUser = new UserDto { Id = int.Parse(user.UserName), Email = user.Email };
-            var hasher = new PasswordHasher<IdentityUser>();
-            return newUser;
-        }
-        private async Task<bool> CheckExistByEmail(string email)
-        {
-            return await userRepo.GetByEmail(email) != null;
-        }
-        private IList<string> GetErorsFromModelState(ModelStateDictionary m)
-        {
-            var errors = new List<string>();
-            foreach (var state in ModelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    errors.Add(error.ErrorMessage);
-                }
-            }
-
-            return errors;
-        }
-        private HttpResponseMessage CreateHttpMessage(HttpStatusCode status, string eror= "")
-        {
-            return new HttpResponseMessage
-            {
-                StatusCode = status,
-                ReasonPhrase = eror
-                };
-            }
     }
 }
