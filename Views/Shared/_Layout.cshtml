@@ -1,14 +1,19 @@
 ﻿@inject SignInManager<IdentityUser> signInMeneger;
+@using MyProject.Models
 
 
 <!DOCTYPE html>
 <html lang="en">
+
+
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <title>@ViewData["Title"] - MyProject</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/datatables/css/jquery.dataTables.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
@@ -28,24 +33,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                       
+
                     </ul>
-                    <!--select option-->
-                    <ul class="navbar-nav ml-auto">
-                        @if (signInMeneger.IsSignedIn(User))
-                        {
-                        <li class="nav-item dropdown" >
-                         
-                            <label class ="dropdown-toggle" data-toggle="dropdown">
-                            Hello @User.Identity.Name
+
+
+
+                    @if (signInMeneger.IsSignedIn(User) && User.IsInRole(((int)(UserRollsType.Admin)).ToString()))
+                    {
+                    <ul class="navbar-nav ml-3">
+
+                        <li class="nav-item dropdown">
+
+                            <label class="dropdown-toggle" data-toggle="dropdown">
+                                Admin meneger
                             </label>
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <form asp-controller="Account" asp-action="Logout">
+                                    <form asp-controller="AdminManager" asp-action="AddCourse" method="get">
                                         <button type="submit" class="nav-link btn btn-link py-0"
                                                 style="width:auto">
-                                            Logout
+                                            Add course
                                         </button>
                                     </form>
                                 </li>
@@ -54,14 +62,63 @@
                                     <form method="get" asp-controller="Account" asp-action="EditUser" asp-route-id="@User.Identity.Name">
                                         <button type="submit" class="nav-link btn btn-link py-0"
                                                 style="width:auto">
-                                            Edit user
+                                            Delete course
                                         </button>
                                     </form>
                                 </li>
+
+                                <li>
+                                    <form method="get" asp-controller="AdminManager" asp-action="MakeUserLecturer">
+                                        <button type="submit" class="nav-link btn btn-link py-0"
+                                                style="width:auto">
+                                            Privacy settings
+                                        </button>
+                                    </form>
+                                </li>
+
                             </ul>
                         </li>
 
-    
+
+                    </ul>
+                    }
+
+
+
+
+
+                    <!--select option-->
+                    <ul class="navbar-nav ml-auto">
+                        @if (signInMeneger.IsSignedIn(User))
+                        {
+                            <li class="nav-item dropdown">
+
+                                <label class="dropdown-toggle" data-toggle="dropdown">
+                                    Hello @User.Identity.Name
+                                </label>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Logout
+                                            </button>
+                                        </form>
+                                    </li>
+
+                                    <li>
+                                        <form method="get" asp-controller="Account" asp-action="EditUser" asp-route-id="@User.Identity.Name">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Edit user
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+
+
                         }
                         else
                         {
@@ -94,6 +151,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

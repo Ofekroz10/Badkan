@@ -41,7 +41,8 @@ namespace MyProject
                 option.Password.RequireNonAlphanumeric = false;
                 option.Password.RequireDigit = true;
                 option.Password.RequireUppercase = false;
-            
+
+
             }).AddEntityFrameworkStores<MyDbContext>();
 
             services.AddMvc(config =>
@@ -50,6 +51,14 @@ namespace MyProject
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin", policy =>
+                     policy.RequireAssertion(context =>
+            context.User.IsInRole("admin")));
+
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

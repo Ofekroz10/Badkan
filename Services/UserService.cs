@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyProject.Dtos;
+using MyProject.Models;
 using MyProject.Models.Reposetories;
 using MyProject.Services;
 using MyProject.Validations;
@@ -25,6 +26,7 @@ namespace MyProject.Services
             this.roleManager = roleManager;
             this.signInManager = signInManager;
         }
+
 
         public async Task<bool> IsOldPasswordValidAsync(string oldPassword, long id)
         {
@@ -124,7 +126,7 @@ namespace MyProject.Services
 
         public async Task<bool> CheckExistById(string id)
         {
-            return await GetById(id) != null; 
+            return await GetById(id) != null;
         }
 
         public IEnumerable<IdentityRole> GetListOfRoles()
@@ -148,7 +150,7 @@ namespace MyProject.Services
             return roleManager.Roles;
         }
 
-        public IEnumerable GetUsersByRolls()
+        public IEnumerable<UserRoleType> GetUsersByRolls()
         {
             var userRoles = GetUserRolesTable().ToList();
             var users = GetAll();
@@ -161,9 +163,29 @@ namespace MyProject.Services
             var afterJoinRole = from t1 in afterJoin
                                 join ro in rols on t1.RoleId equals ro.Id
                                 orderby ro.Id
-                                select new { t1.UserName, ro.Name };
+                                select new UserRoleType {UserId =  t1.UserName,RoleName = (UserRollsType)(int.Parse(ro.Name)) };
 
             return afterJoinRole;
         }
+
+
+        public UserRollsType GetRoleOfUser(string id)
+        {
+            
+            return (GetUsersByRolls().Where(u => u.UserId == id).FirstOrDefault().RoleName);
+        }
+
+        public async Task<IdentityResult> ChangeRoleAsync(string id, UserRollsType to)
+        {
+           return await userRepo.ChangeRoleAsync(id, to);
+        }
+
+        public IEnumerable<UserRoleType> GetAllLecturers()
+        {
+            return GetUsersByRolls().Where(user => user.RoleName == UserRollsType.Lecturer);
+        }
+
+        
+
     }
 }

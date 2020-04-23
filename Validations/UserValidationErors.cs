@@ -14,6 +14,7 @@ namespace MyProject.Validations
         public const string INCORRECT_PASSWORD = "Old password is not correct";
         public const string ID_LENGTH = "The length is not {0}";
         public const string ROLE_DO_NOT_EXIST = "Role name '{0}' do not exist";
+        public const string IS_NOT_IN_ENUM = "'{0}' is not in enum";
 
     }
 }

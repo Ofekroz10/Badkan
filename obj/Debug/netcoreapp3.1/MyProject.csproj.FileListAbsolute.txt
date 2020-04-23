@@ -145,5 +145,8 @@ C:\Users\ofekroz\source\repos\MyProject\MyProject\bin\Debug\netcoreapp3.1\Micros
 C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
 C:\Users\ofekroz\source\repos\MyProject\MyProject\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\ofekroz\source\repos\MyProject\MyProject\bin\Debug\netcoreapp3.1\Microsoft.AspNet.Identity.Core.dll
-C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\MyProject.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\Account\Edit.cshtml.g.cs
+C:\Users\ofekroz\source\repos\MyProject\MyProject\bin\Debug\netcoreapp3.1\Enums.NET.dll
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\MakeUserLecturer.cshtml.g.cs
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\MyProject.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\AddCourse.cshtml.g.cs

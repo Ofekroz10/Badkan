@@ -9,6 +9,14 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.11",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "datatable@2.0.1",
+      "destination": "wwwroot/datatable/"
+    },
+    {
+      "library": "datatables@1.10.11",
+      "destination": "wwwroot/lib/datatables/"
     }
   ]
 }

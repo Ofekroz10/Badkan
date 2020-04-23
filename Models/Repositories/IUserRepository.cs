@@ -21,6 +21,7 @@ namespace MyProject.Models.Reposetories
         public Task<IdentityResult> AddRoleToUser(IdentityUser user, string roleName);
         public Task<bool> IsUserBelongToRole(string userId, string roleName);
         public IEnumerable<IdentityUserRole<string>> GetUserRols();
+        public Task<IdentityResult> ChangeRoleAsync(string id, UserRollsType to);
 
 
     }

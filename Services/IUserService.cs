@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyProject.Dtos;
+using MyProject.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace MyProject.Services
         public Task<IdentityResult> UpdateUser(IdentityUser user);
         public PasswordVerificationResult ComparePasswords(IdentityUser user, string newPassword);
         public Task<IdentityResult> DeleteUser(IdentityUser user);
+        public Task<IdentityResult> ChangeRoleAsync(string id, UserRollsType to);
+        public IEnumerable<UserRoleType> GetAllLecturers();
 
 
         /*Api Functions */
@@ -36,7 +39,14 @@ namespace MyProject.Services
         public Task<bool> CheckIfUserBelongToRole(string userId, string roleName);
         public IEnumerable<IdentityUserRole<string>> GetUserRolesTable();
         public IEnumerable<IdentityRole> GetAllRolls();
-        public IEnumerable GetUsersByRolls();
+        public IEnumerable<UserRoleType> GetUsersByRolls();
+        public UserRollsType GetRoleOfUser(string id);
 
-}
+
+    }
+
+   
+   
+   
+
 }

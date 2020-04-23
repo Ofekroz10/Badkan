@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyProject.Dtos;
+using MyProject.Models;
 using MyProject.Models.Reposetories;
 using MyProject.Services;
 using MyProject.Validations;
@@ -145,10 +146,19 @@ namespace MyProject.Controllers.Api
         }
 
         [HttpPost(ApiRoutes.AccountRoutes.CREATE_ROLE)]
-        public async Task<IActionResult> CreateRole(AddUserToRoleDto rolldto)
+        public async Task<IActionResult> CreateRole([FromBody]AddUserToRoleDto rolldto)
         {
-            var name = rolldto.RoleName;
-            var result = await userService.CreateRole(name);
+            string roleName = "";
+            try
+            {
+                roleName = ((UserRollsType)(rolldto.Role)).IntValueAsString();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format(UserValidationErors.IS_NOT_IN_ENUM, rolldto.Role));
+            }
+
+            var result = await userService.CreateRole(roleName);
             if (result.Succeeded)
                 return Ok();
             return BadRequest(result.Errors);
@@ -164,9 +174,17 @@ namespace MyProject.Controllers.Api
         }
 
         [HttpPost(ApiRoutes.AccountRoutes.ADD_USER_TO_ROLE)]
-        public async Task<IActionResult> AddUserToRole(int userId, AddUserToRoleDto roleDto)
+        public async Task<IActionResult> AddUserToRole(int userId, [FromBody]AddUserToRoleDto roleDto)
         {
-            var roleName = roleDto.RoleName;
+            string roleName = "";
+            try
+            {
+                roleName = ((UserRollsType)(roleDto.Role)).IntValueAsString();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(string.Format(UserValidationErors.IS_NOT_IN_ENUM, roleDto.Role));
+            }
 
             if (await userService.CheckIfRoleExist(roleName))
             {

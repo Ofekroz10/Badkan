@@ -44,6 +44,29 @@ namespace MyProject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "40bc10b7-ce2a-47f5-acbb-22d88ed4fc77",
+                            ConcurrencyStamp = "bfd2f5d5-4f86-4815-b654-ad0f21a18281",
+                            Name = "0",
+                            NormalizedName = "0"
+                        },
+                        new
+                        {
+                            Id = "2709e507-aeba-42a8-90b0-d63b6684eb67",
+                            ConcurrencyStamp = "213b78b7-4d8b-4df2-8c96-525714946379",
+                            Name = "1",
+                            NormalizedName = "1"
+                        },
+                        new
+                        {
+                            Id = "d5ecfce4-0d57-4467-9056-161558f828e0",
+                            ConcurrencyStamp = "59428d97-2f77-4cec-ba48-8420ddb5c37e",
+                            Name = "2",
+                            NormalizedName = "2"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -213,6 +236,68 @@ namespace MyProject.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("MyProject.Models.Course", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CourseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CourseId");
+
+                    b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("MyProject.Models.CourseLecturers", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LecturerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "LecturerId");
+
+                    b.ToTable("CourseLecturers");
+                });
+
+            modelBuilder.Entity("MyProject.Models.Exercise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GitHubLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("MyProject.Models.ExerciseCourses", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "ExId");
+
+                    b.ToTable("ExercisesCourses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

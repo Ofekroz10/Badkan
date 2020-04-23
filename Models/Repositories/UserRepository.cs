@@ -41,6 +41,16 @@ namespace MyProject.Models.Reposetories
             return await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
+        public async Task<IdentityResult> ChangeRoleAsync(string id, UserRollsType to)
+        {
+            var user = await GetById(id);
+            var roles = await userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+                await userManager.RemoveFromRoleAsync(user, role);
+           return await AddRoleToUser(user, to.IntValueAsString());
+
+        }
+
         public PasswordVerificationResult ComparePasswords(IdentityUser user, string password)
         {
             return userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);

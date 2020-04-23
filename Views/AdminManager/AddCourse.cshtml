@@ -1,0 +1,53 @@
+﻿@model MyProject.ViewModel.CourseViewModel
+
+@{
+    ViewData["Title"] = "AddCourseView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Add Course</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Course.CourseName"></label>
+                <input asp-for="Course.CourseName" class="form-control" />
+                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+            </div>
+            <label>Select lecturers to the course</label>
+            @{
+                var lst = Model.List;
+                @for (int i = 0; i < lst.Count(); i++)
+                {
+                    <div class="checkbox">
+                        <label><input type="checkbox" class="lectureChecks" id="checkbox @i" asp-for="@Model.List[i].IsChecked">@Model.List[i].LecturerId</label>
+                        <input type="hidden" asp-for="@Model.List[i].LecturerId" />
+                    </div>
+
+
+                }
+
+                @if (lst.Count() == 0)
+                {
+                    <div class="checkbox">
+                        <span class="badge badge-danger" style="font-size:medium">Lecturers list is empty</span>
+                    </div>
+                }
+            }
+            <p></p>
+            <button type="submit" id="sub" class="btn btn-primary" disabled>Create</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+    $('.lectureChecks').on('change', function() {
+      $('#sub').prop('disabled', !$(".lectureChecks:checked").length);
+    })
+
+    </script>
+
+}

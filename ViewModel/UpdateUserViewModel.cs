@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyProject.Controllers;
+using MyProject.Models;
 using MyProject.Validations;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace MyProject.ViewModel
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        public UserRollsType Type { get; set; }
 
 
     }

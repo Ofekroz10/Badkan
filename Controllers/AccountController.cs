@@ -10,6 +10,7 @@ using MyProject.ViewModel;
 using MyProject.Validations;
 using Microsoft.AspNetCore.Authorization;
 using MyProject.Services;
+using EnumsNET;
 
 namespace MyProject.Controllers
 {
@@ -87,7 +88,13 @@ namespace MyProject.Controllers
                     if(!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
 
-                    return RedirectToAction("Index", "Home");
+                    var roleResult = await userService.RegisterUserToRole(int.Parse(user.UserName), 
+                        UserRollsType.User.IntValueAsString());
+
+                    if (!roleResult.Succeeded)
+                        ModelState.AddModelError("", string.Join(",", roleResult.Errors));
+                    else
+                        return RedirectToAction("Index", "Home");
                 }
 
                 foreach(var eror in result.Errors)
@@ -130,7 +137,8 @@ namespace MyProject.Controllers
                 Id = long.Parse(user.UserName),
                 PreId = long.Parse(user.UserName),
                 NewPassword = "If you dont want to change, enter your current password",
-                OldPassword = "If you dont want to change, enter your current password"
+                OldPassword = "If you dont want to change, enter your current password",
+                Type = userService.GetRoleOfUser(id.ToString())
 
             };
 
