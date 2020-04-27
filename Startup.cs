@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyProject.Models;
 using MyProject.Models.Reposetories;
+using MyProject.Models.Repositories;
 using MyProject.Services;
 
 namespace MyProject
@@ -35,6 +36,9 @@ namespace MyProject
             options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+
             services.AddIdentity<IdentityUser, IdentityRole>(option =>
             {
                 option.Password.RequiredLength = 5;

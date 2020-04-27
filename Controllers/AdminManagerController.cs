@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyProject.Models;
 using MyProject.Services;
+using MyProject.Validations;
 using MyProject.ViewModel;
 
 namespace MyProject.Controllers
@@ -15,10 +17,14 @@ namespace MyProject.Controllers
     public class AdminManagerController : Controller
     {
         private readonly IUserService userService;
+        private readonly IAdminService adminService;
 
-        public AdminManagerController(IUserService userService)
+
+
+        public AdminManagerController(IUserService userService, IAdminService adminService)
         {
             this.userService = userService;
+            this.adminService = adminService;
         }
 
         public IActionResult Index()
@@ -66,9 +72,32 @@ namespace MyProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCourse(CourseViewModel viewModel)
+        public async Task<IActionResult> AddCourseAsync(CourseViewModel viewModel)
         {
-            return View(viewModel);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int courseId = await adminService.AddCourse(viewModel);
+                    viewModel.Course.CourseId = courseId;
+                }
+                catch(ArgumentException e)
+                {
+                    ModelState.AddModelError("",string.Format(AdminValidations.COURSE_EXIST, viewModel.Course.CourseName));
+                    return View(viewModel);
+                }
+
+                adminService.AddLecturersToCourse(viewModel.GetAllSelectedLecturers());
+
+                MessagesViewModel msg = new MessagesViewModel();
+                msg.Messages.Add("Course "+ viewModel.Course.CourseName + " added");
+
+
+                return RedirectToAction("Index", "Home", msg);
+            }
+
+                return View(viewModel);
+            
         }
 
 

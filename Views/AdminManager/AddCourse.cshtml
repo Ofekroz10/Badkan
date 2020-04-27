@@ -12,8 +12,8 @@
         <form method="post">
             <div class="form-group">
                 <label asp-for="Course.CourseName"></label>
-                <input asp-for="Course.CourseName" class="form-control" />
-                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+                <input asp-for="Course.CourseName" class="form-control" id="courseNameText"/>
+                <div asp-validation-summary="All" class="text-danger"></div>
             </div>
             <label>Select lecturers to the course</label>
             @{
@@ -44,10 +44,43 @@
 @section Scripts{
     <script>
 
-    $('.lectureChecks').on('change', function() {
-      $('#sub').prop('disabled', !$(".lectureChecks:checked").length);
-    })
+        $('.lectureChecks').on('change', function() {
+                $('#sub').prop('disabled', !$(".lectureChecks:checked").length);
+        })
+
+         $(window).on('load', function () {
+                $('#sub').prop('disabled', !$(".lectureChecks:checked").length);
+        });
+
+
+        /*
+        var courseName = ""
+        var hasLecturers = true
+        var textChanged = false
+
+        $('.lectureChecks').on('change', function () {
+            //$('#sub').prop('disabled', !$(".lectureChecks:checked").length);
+            this.hasLecturers = !$(".lectureChecks:checked").length;
+            $('#sub').prop('disabled', this.hasLecturers && this.textChanged );
+        })
+
+
+        document.getElementById('courseNameText').addEventListener('input', function () {
+            var curText = String(this.value);
+            console.log(curText);
+            this.textChanged = (this.courseName !== curText);
+             console.log( this.textChanged);
+            $('#sub').prop('disabled', this.hasLecturers && this.textChanged);
+            });
+
+        $(window).on('load', function () {
+            this.courseName = "" //= $('#input').text()
+             this.console.log(this.courseName)
+             $('#sub').prop('disabled', true); 
+        });
+        */
 
     </script>
 
 }
+

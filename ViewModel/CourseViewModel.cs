@@ -1,6 +1,7 @@
 ﻿using MyProject.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,25 @@ namespace MyProject.ViewModel
         public CourseViewModel()
         {
             List = new List<IsCheckedLecturer>();
+        }
+
+        public IList<CourseLecturers> GetAllSelectedLecturers()
+        {
+            IList<CourseLecturers> lst = new List<CourseLecturers>();
+            foreach( var x in List)
+            {
+                if (x.IsChecked)
+                {
+                    lst.Add(new CourseLecturers
+                    {
+                        LecturerId = int.Parse(x.LecturerId),
+                        CourseId = Course.CourseId
+                    }) ;
+                }
+            }
+
+            return lst;
+                
         }
     }
 
