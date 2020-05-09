@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CourseViewModel>
+@{
+    ViewData["Title"] = "CourseMenegment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Course Managment- my courses</h1>
+
+@if(Model.Count() == 0) { 
+    <label class="text-danger">You dont courses</label>
+
+}
+else { 
+
+<table class="table-bordered" id="table">
+    <thead>
+        <tr class="thead-light">
+            <th>Course Id</th>
+            <th>Course Name</th>
+            <th>Course Lecturers</th>
+            <th>Delete Course?</th>
+        </tr>
+    <thead>
+    <tbody>
+        @foreach (var courseLecturer in Model)
+        {
+            <tr>
+                <td>@courseLecturer.Course.CourseId</td>
+                <td><a asp-action="EditCourse" asp-route-courseName="@courseLecturer.Course.CourseName" action="get">@courseLecturer.Course.CourseName</a></td>
+                <td>
+                    @{
+                        var lecturers = courseLecturer.List;
+
+
+
+                        foreach (var lecture in lecturers)
+                        {
+                            <label>@lecture.LecturerId | </label>
+
+                        }
+                    }
+
+                </td>
+                <td>
+                    <form method="post" asp-action="DeleteCourse" asp-route-courseName="@courseLecturer.Course.CourseName">
+                        <input type="submit" disabled value="Delete" class="btn btn-danger">
+                    </form>
+                    
+                </td>
+            </tr>
+        }
+    <tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable();//myTable is the id of the table to be displayed as dataTable
+        });
+    </script>
+
+
+    }
+}

@@ -1,10 +1,12 @@
-﻿using MyProject.Models;
+﻿using Microsoft.AspNetCore.Http;
+using MyProject.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MyProject.Models
@@ -47,5 +49,11 @@ public static class UserRollsTypeExtentions
                        .First()
                        .GetCustomAttribute<DisplayAttribute>()
                        .Name;
+    }
+
+    public static bool AdminOrLecturer(ClaimsPrincipal cp)
+    {
+        return cp.IsInRole(UserRollsType.Admin.IntValueAsString()) ||
+               cp.IsInRole(UserRollsType.Lecturer.IntValueAsString());
     }
 }

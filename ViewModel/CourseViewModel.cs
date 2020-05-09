@@ -35,6 +35,14 @@ namespace MyProject.ViewModel
             return lst;
                 
         }
+
+        public static CourseViewModel CreateVMfromLecturersCourse(Course c, IEnumerable<string> lecturers)
+        {
+            CourseViewModel vm = new CourseViewModel() { Course = c, List = new List<IsCheckedLecturer>() };
+            foreach (var l in lecturers)
+                vm.List.Add(new IsCheckedLecturer() { IsChecked = false, LecturerId = l });
+            return vm;
+        }
     }
 
     public class IsCheckedLecturer

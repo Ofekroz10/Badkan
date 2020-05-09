@@ -150,3 +150,6 @@ C:\Users\ofekroz\source\repos\MyProject\MyProject\bin\Debug\netcoreapp3.1\Enums.
 C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\MakeUserLecturer.cshtml.g.cs
 C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\MyProject.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\AddCourse.cshtml.g.cs
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\EditCourse.cshtml.g.cs
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\LecturerManager\CourseManagment.cshtml.g.cs
+C:\Users\ofekroz\source\repos\MyProject\MyProject\obj\Debug\netcoreapp3.1\Razor\Views\AdminManager\CourseManagment.cshtml.g.cs

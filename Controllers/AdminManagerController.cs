@@ -87,7 +87,7 @@ namespace MyProject.Controllers
                     return View(viewModel);
                 }
 
-                adminService.AddLecturersToCourse(viewModel.GetAllSelectedLecturers());
+                await adminService.AddLecturersToCourseAsync(viewModel.GetAllSelectedLecturers());
 
                 MessagesViewModel msg = new MessagesViewModel();
                 msg.Messages.Add("Course "+ viewModel.Course.CourseName + " added");
@@ -101,6 +101,60 @@ namespace MyProject.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult EditCourse(string courseName)
+        {
+            CourseViewModel courseVM = adminService.GetCourseViewModel(courseName);
+            return View(courseVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCourseAsync(CourseViewModel courseVM)
+        {
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                   await adminService.EditCourseAsync(courseVM);
+                }
+                catch(ArgumentException e)
+                {
+                    ModelState.AddModelError("", string.Format(AdminValidations.COURSE_EXIST, courseVM.Course.CourseName));
+                    return View(courseVM);
+                }
+                catch(SystemException e)
+                {
+                    ModelState.AddModelError("", Validations.GeneralValidations.DB_EROR);
+                    return View(courseVM);
+                }
+                    
+            }
+
+            MessagesViewModel msg = new MessagesViewModel();
+            msg.Messages.Add("Course " + courseVM.Course.CourseName + " edited");
+
+            return RedirectToAction("Index", "Home", msg);
+        }
+
+        [HttpGet]
+        public IActionResult CourseManagment()
+        {
+            return View(adminService.GetUserLecturerWithCourseName());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCourse(string courseName)
+        {
+            int returnVal = await adminService.DeleteCourse(courseName);
+
+            if (returnVal <= 0)
+                throw new SystemException();
+
+            MessagesViewModel msg = new MessagesViewModel();
+            msg.Messages.Add("Course " + courseName + " deleted");
+            return RedirectToAction("Index", "Home", msg);
+        }
 
     }
 }

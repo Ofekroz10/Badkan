@@ -37,7 +37,8 @@ namespace MyProject
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAdminService, AdminService>();
-            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<ICourseLecturerRepository, CourseLecturerRepository>();
+            services.AddTransient<ILecturerService, LecturerService>();
 
             services.AddIdentity<IdentityUser, IdentityRole>(option =>
             {

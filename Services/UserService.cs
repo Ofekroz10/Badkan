@@ -152,9 +152,10 @@ namespace MyProject.Services
 
         public IEnumerable<UserRoleType> GetUsersByRolls()
         {
+
             var userRoles = GetUserRolesTable().ToList();
-            var users = GetAll();
-            var rols = GetAllRolls();
+            var users = GetAll().ToList();
+            var rols = GetAllRolls().ToList();
 
             var afterJoin = from t1 in users
                             join ur in userRoles on t1.Id equals ur.UserId

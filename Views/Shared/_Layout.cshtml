@@ -40,47 +40,76 @@
 
                     @if (signInMeneger.IsSignedIn(User) && User.IsInRole(((int)(UserRollsType.Admin)).ToString()))
                     {
-                    <ul class="navbar-nav ml-3">
+                        <ul class="navbar-nav ml-3">
 
-                        <li class="nav-item dropdown">
+                            <li class="nav-item dropdown">
 
-                            <label class="dropdown-toggle" data-toggle="dropdown">
-                                Admin meneger
-                            </label>
+                                <label class="dropdown-toggle" data-toggle="dropdown">
+                                    Admin meneger
+                                </label>
 
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <form asp-controller="AdminManager" asp-action="AddCourse" method="get">
-                                        <button type="submit" class="nav-link btn btn-link py-0"
-                                                style="width:auto">
-                                            Add course
-                                        </button>
-                                    </form>
-                                </li>
+                                <ul class="dropdown-menu">
 
-                                <li>
-                                    <form method="get" asp-controller="Account" asp-action="EditUser" asp-route-id="@User.Identity.Name">
-                                        <button type="submit" class="nav-link btn btn-link py-0"
-                                                style="width:auto">
-                                            Delete course
-                                        </button>
-                                    </form>
-                                </li>
+                                    <li>
+                                        <form method="get" asp-controller="AdminManager" asp-action="CourseManagment">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Course Managment
+                                            </button>
+                                        </form>
+                                    </li>
 
-                                <li>
-                                    <form method="get" asp-controller="AdminManager" asp-action="MakeUserLecturer">
-                                        <button type="submit" class="nav-link btn btn-link py-0"
-                                                style="width:auto">
-                                            Privacy settings
-                                        </button>
-                                    </form>
-                                </li>
+                                    <li>
+                                        <form asp-controller="AdminManager" asp-action="AddCourse" method="get">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Add course
+                                            </button>
+                                        </form>
+                                    </li>
 
-                            </ul>
-                        </li>
+                                    <li>
+                                        <form method="get" asp-controller="AdminManager" asp-action="MakeUserLecturer">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Privacy settings
+                                            </button>
+                                        </form>
+                                    </li>
+
+                                </ul>
+                            </li>
 
 
-                    </ul>
+                        </ul>
+                    }
+
+
+                    @if (signInMeneger.IsSignedIn(User) && User.IsInRole(((int)(UserRollsType.Admin)).ToString()) ||User.IsInRole(((int)(UserRollsType.Lecturer)).ToString()) )
+                    {
+                        <ul class="navbar-nav ml-3">
+
+                            <li class="nav-item dropdown">
+
+                                <label class="dropdown-toggle" data-toggle="dropdown">
+                                    Lecture Manager
+                                </label>
+
+                                <ul class="dropdown-menu">
+
+                                    <li>
+                                        <form method="get" asp-controller="LecturerManager" asp-action="GetManageMyCoure" asp-route-id="@User.Identity.Name">
+                                            <button type="submit" class="nav-link btn btn-link py-0"
+                                                    style="width:auto">
+                                                Managment my courses
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                        </ul>
                     }
 
 

@@ -10,6 +10,10 @@ namespace MyProject.Services
     public interface IAdminService
     {
         public Task<int> AddCourse(CourseViewModel course);
-        public void AddLecturersToCourse(IList<CourseLecturers> courseLecturers);
+        public Task AddLecturersToCourseAsync(IList<CourseLecturers> courseLecturers);
+        public CourseViewModel GetCourseViewModel(string courseName);
+        public Task<int> EditCourseAsync(CourseViewModel courseVM);
+        public IEnumerable<CourseViewModel> GetUserLecturerWithCourseName();
+        public Task<int> DeleteCourse(string courseName);
     }
 }
