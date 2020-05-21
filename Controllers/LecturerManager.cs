@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyProject.Models;
 using MyProject.Services;
+using MyProject.ViewModel;
 
 namespace MyProject.Controllers
 {
@@ -29,6 +31,27 @@ namespace MyProject.Controllers
 
             return BadRequest(
                 string.Format(Validations.LecturerValidationErorr.UserIsNotLecturer, id.ToString()));
+        }
+
+        [HttpGet]
+        public IActionResult EditCourse(int courseId, string courseName)
+        {
+            var missionsVM = lecturerService.GetAllMissionsOfCourse(courseId, courseName);
+            missionsVM.Choosen = new Exercise() { Id=1, GitHubLink="dd", Description ="dd", Title="d"};
+            return View("EditCourse",missionsVM);
+
+        }
+
+        [HttpPost]
+        public IActionResult EditCourse(ExerciseCourseVM ex)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("EditCourse", ex);
+            }
+
+            return Ok(ex.Choosen);
+
         }
     }
 }

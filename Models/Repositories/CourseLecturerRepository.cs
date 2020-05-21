@@ -98,6 +98,11 @@ namespace MyProject.Models.Repositories
 
         }
 
+        public IList<ExerciseCourses> GetAllMissionsOfCourse(int courseName)
+        {
+            return (dbContext.ExercisesCourses.Where(x => x.CourseId == courseName).ToList());
+        }
+
         public Course GetCourseById(int id)
         {
             return dbContext.Courses.FirstOrDefault(x => x.CourseId == id);
@@ -111,6 +116,11 @@ namespace MyProject.Models.Repositories
         public IList<CourseLecturers> GetCourseLecturers()
         {
             return dbContext.CourseLecturers.ToList();
+        }
+
+        public Exercise GetExerciseById(int exId)
+        {
+            return dbContext.Exercises.SingleOrDefault(x => x.Id == exId);
         }
 
         public IList<CourseLecturers> GetLecturersOfCourse(Course c)

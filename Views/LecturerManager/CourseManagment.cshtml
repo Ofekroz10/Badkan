@@ -26,7 +26,7 @@ else {
         {
             <tr>
                 <td>@courseLecturer.Course.CourseId</td>
-                <td><a asp-action="EditCourse" asp-route-courseName="@courseLecturer.Course.CourseName" action="get">@courseLecturer.Course.CourseName</a></td>
+                <td><a asp-action="EditCourse" asp-route-courseId="@courseLecturer.Course.CourseId" asp-route-courseName ="@courseLecturer.Course.CourseName" action="get">@courseLecturer.Course.CourseName</a></td>
                 <td>
                     @{
                         var lecturers = courseLecturer.List;

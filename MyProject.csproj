@@ -21,6 +21,8 @@
     <Compile Remove="Migrations\20200404024158_AddIdentity.Designer.cs" />
     <Compile Remove="Migrations\20200416070215_AddRolls.cs" />
     <Compile Remove="Migrations\20200416070215_AddRolls.Designer.cs" />
+    <Compile Remove="Migrations\20200513075214_addedExercisesCourse.cs" />
+    <Compile Remove="Migrations\20200513075214_addedExercisesCourse.Designer.cs" />
   </ItemGroup>
   
   

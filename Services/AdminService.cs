@@ -116,5 +116,10 @@ namespace MyProject.Services
             IEnumerable<CourseLecturers> rows = adminRepo.GetLecturersOfCourse(c);
             return await adminRepo.DeleteCourseLecturerAndCourse(c, rows);
         }
+
+        public Exercise GetExerciseById(int exId)
+        {
+            return adminRepo.GetExerciseById(exId);
+        }
     }
 }

@@ -1,0 +1,126 @@
+﻿@model ExerciseCourseVM
+@{
+    ViewData["Title"] = "EditCourse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<h1>Edit Course: @Model.CourseName</h1>
+<br />
+
+<form method="post" asp-action="EditCourse">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div>
+        <label id="noMissions" class="text-danger">There are no missions in this course</label>
+    </div>
+    <br />
+
+    <div>
+        <label>Select mission to edit </label>
+        <select asp-items="@Model.Lst" id="comboId" class="custom-select-sm" asp-for="Choosen.Id"></select>
+        @{ 
+            var lst = Model.Lst;
+            @for (int i = 0; i < lst.Count(); i++)
+            {
+                <div class="checkbox">
+                    <label>type="hidden" asp-for="@Model.Lst[i]" </label>
+                </div>
+
+            }
+        }
+    </div>
+    <br />
+
+    <div>
+        <div style="flex-direction:row">
+
+            <label>Mission name </label>
+            <input style="display:inline-block" id="MName" class="input-group-text" asp-for="Choosen.Title">
+
+
+        </div>
+
+        <br />
+
+        <div style="flex-direction:row">
+
+            <label>Mission Github link </label>
+            <input style="display:inline-block" id="Mgit" class="input-group-text" asp-for="Choosen.GitHubLink">
+
+        </div>
+
+        <br />
+
+        <div>
+
+            <label style="margin-left:300px;">Mission Description</label>
+            <input style="width:700px; height:250px;" id="MDescription" class="input-group-text" asp-for="Choosen.Description">
+
+        </div>
+        <br />
+
+
+        <button type="submit" class="submit btn btn-primary" id="sub">Submit</button>
+    </div>
+</form>
+
+
+
+
+<script>
+    $(document).ready(() => {
+
+        let show = "inline";
+        let hide = "none";
+
+        if (@Model.Lst.Count > 0) {
+
+            updateDitails();
+            getItem("noMissions").style.display = hide;
+            getItem("comboId").onchange = updateDitails;
+        }
+        else {
+            makeControllsEnabled(["comboId", "MName", "Mgit", "MDescription"]);
+            getItem("noMissions").style.display = show;
+        }
+
+
+    });
+
+    updateDitails = () => {
+        var missionId = getComboValue();
+        //ajax load info
+        $.ajax({
+            url: "/api/lecture/MissionDetails/?id=" + missionId,
+            data: ""
+        }).done(result => {
+            $("#MName").val(result.title);
+            $("#MDescription").val(result.description);
+            $("#Mgit").val(result.gitHubLink);
+        })
+    }
+
+    getItem = (id) => { return document.getElementById(id); }
+
+    getComboValue = () => {
+        let element = getItem("comboId");
+        let missionId = element.options[element.selectedIndex].value;
+        return missionId;
+    }
+
+    makeControllsEnabled = (controlsName) => {
+        let arr = controlsName.reduce(
+            (lst, element) => { return [...lst, getItem(element)]; },
+            []
+        );
+
+        arr.map(x => x.disabled = true);
+    }
+
+</script>
+
+
+

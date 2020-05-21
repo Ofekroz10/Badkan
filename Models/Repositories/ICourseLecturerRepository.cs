@@ -15,6 +15,8 @@ namespace MyProject.Models.Repositories
         public Task<int> EditNameToCourseAsync(Course course);
         public Course GetCourseById(int id);
         public Task<int> DeleteAllLecturerOfCourse(Course c);
+        public IList<ExerciseCourses> GetAllMissionsOfCourse(int courseName);
+        public Exercise GetExerciseById(int exId);
         public IList<CourseLecturers> GetLecturersOfCourse(Course c);
         public IList<string> GetAllCoursesName();
         public IList<CourseLecturers> GetCourseLecturers();

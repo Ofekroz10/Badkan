@@ -15,5 +15,6 @@ namespace MyProject.Services
         public Task<int> EditCourseAsync(CourseViewModel courseVM);
         public IEnumerable<CourseViewModel> GetUserLecturerWithCourseName();
         public Task<int> DeleteCourse(string courseName);
+        public Exercise GetExerciseById(int exId);
     }
 }

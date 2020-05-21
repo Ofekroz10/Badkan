@@ -7,6 +7,7 @@ namespace MyProject.Validations
 {
     public static class LecturerValidationErorr
     {
-        public static string UserIsNotLecturer = "User {0} is not lecturer!";
+        public const string UserIsNotLecturer = "User {0} is not lecturer!";
+        public const string GithubRegex = @"^(?:http(?:s)?:\/\/)?(?:[^\.]+\.)?github\.com";
     }
 }
